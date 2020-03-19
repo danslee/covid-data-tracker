@@ -16,9 +16,16 @@ This has only been tested on MacOS 10.15 with python 3.7.4.
 
 ## Download data get-covid-data.py
 
+python get-covid-data.py -d data_dir
 
-## Parse data parse-covid-data.py
+## Parse data parse-data.py
 
+python parse-data.py -d data_dir
+
+## Notes
+
+Country names are from iso-3166, I know there's all kinds of thoughts and disputes about Taiwan etc. etc. There
+are better times to talk about that stuff.
 
 ## Attribution
 
