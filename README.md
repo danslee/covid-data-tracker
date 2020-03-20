@@ -3,12 +3,12 @@
 The tools in this directory do a few things
   - fetch raw data from several sources
     - https://covidtracking.com/
-      - https://covidtracking.com/api/states/daily : json
+      - http://covidtracking.com/api/states/daily.csv
     - https://github.com/CSSEGISandData/COVID-19
-      - https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv
       - https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv
+      - https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv
     - https://ourworldindata.org/coronavirus
-      - https://covid.ourworldindata.org/data/full_data.csv : csv
+      - https://covid.ourworldindata.org/data/full_data.csv
     - in default mode, this data is stored locally as files.
   - parse the above data into a unified map of data and print said data in table format.
 
