@@ -25,6 +25,7 @@ import re
 
 
 def add_raw_data_point(region, date, name, datatype, val, out_map):
+    print(f"{region} {date} {name} {datatype} {val}")
     if not val:
         val = 0
     if region not in out_map:
@@ -36,7 +37,7 @@ def add_raw_data_point(region, date, name, datatype, val, out_map):
     out_map[region][date][name][datatype] = val
 
 
-def add_data_point(region, date, name, datatype, val, out_map):
+def add_data_point_cascade(region, date, name, datatype, val, out_map):
     add_raw_data_point(region, date, name, datatype, val, out_map)
 
 
@@ -64,11 +65,10 @@ def owid_parser(lines, out_map):
 
 def csse_str2date(datestr):
     month, day, year = datestr.split('/')
-    return dt.date(int(year), int(month), int(day))
+    return dt.date(2000 + int(year), int(month), int(day))
 
 
 def csse_parser(lines, out_map, datatype):
-    local = {}
     for line in lines:
         subdivision = line["Province/State"]
         country = line["Country/Region"]
@@ -77,7 +77,7 @@ def csse_parser(lines, out_map, datatype):
             if re.match(r"\d\d?/\d\d?/\d\d", item):
                 val = line[item]
                 date = csse_str2date(item)
-                add_data_point(region, date, "csse", datatype, val, out_map)
+                add_data_point_cascade(region, date, "csse", datatype, val, out_map)
 
 
 def csse_parser_confirmed(lines, out_map):

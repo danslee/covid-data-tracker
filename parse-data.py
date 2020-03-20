@@ -18,8 +18,8 @@ class Source(object):
 SOURCES = [
     Source("owid",  "owid-full_data.csv", owid_parser),
     #Source("covidtracker", "covidtracker-daily.csv", noop_parser),
-    #Source("csse",  "csse-confirmed.csv", csse_parser_confirmed),
-    #Source("csse", "csse-deaths.csv", csse_parser_deaths),
+    Source("csse",  "csse-confirmed.csv", csse_parser_confirmed),
+    Source("csse", "csse-deaths.csv", csse_parser_deaths),
 ]
 
 
@@ -58,10 +58,18 @@ def main():
     print(three_weeks_ago)
 
     for k, v in master_map.items():
-        print(f'{k} total_cases ', end='')
+        print(f'{k} total_cases owid ', end='')
         curr_day = three_weeks_ago
         while curr_day <= max_date:
             print(f"{v.get(curr_day, {}).get('owid', {}).get('total_cases', 0)} ", end='')
+            curr_day = curr_day + dt.timedelta(days=1)
+        print('')
+
+    for k, v in master_map.items():
+        print(f'{k} total_cases csse ', end='')
+        curr_day = three_weeks_ago
+        while curr_day <= max_date:
+            print(f"{v.get(curr_day, {}).get('csse', {}).get('total_cases', 0)} ", end='')
             curr_day = curr_day + dt.timedelta(days=1)
         print('')
 
