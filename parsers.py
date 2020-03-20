@@ -41,26 +41,38 @@ def add_data_point_cascade(region, date, name, datatype, val, out_map):
     add_raw_data_point(region, date, name, datatype, val, out_map)
 
 
+def zero_missing(inmap, key):
+    if key not in inmap:
+        return 0
+    val = inmap[key]
+    if not val:
+        return 0
+    return val
+
+
 def noop_parser(lines, out_map):
     pass
 
-def owid_str2date(datestr):
-    year, month, day = datestr.split("-")
-    return dt.date(int(year), int(month), int(day))
+
+def covid_str2date(datestr):
+    year = int(datestr[:4])
+    month = int(datestr[4:6])
+    day = int(datestr[6:8])
+    return dt.date(year, month, day)
 
 
-def add_owid_data(region, date, line, out_map):
-    add_raw_data_point(region, date, 'owid', 'new_cases', line.get('new_cases', 0), out_map)
-    add_raw_data_point(region, date, 'owid', 'total_cases', line.get('total_cases', 0), out_map)
-    add_raw_data_point(region, date, 'owid', 'new_deaths', line.get('new_deaths', 0), out_map)
-    add_raw_data_point(region, date, 'owid', 'total_deaths', line.get('total_deaths', 0), out_map)
+def add_covid_data(region, date, line, out_map):
+    add_raw_data_point(region, date, 'covid', 'total_cases', zero_missing(line, 'positive'), out_map)
+    add_raw_data_point(region, date, 'covid', 'total_deaths', zero_missing(line, 'death'), out_map)
 
 
-def owid_parser(lines, out_map):
+def covid_parser(lines, out_map):
     for line in lines:
-        region = rn.normalize(line["location"])
-        date = owid_str2date(line["date"])
-        add_owid_data(region, date, line, out_map)
+        print(line)
+        state = line["state"]
+        region = rn.normalize("USA", state)
+        date = covid_str2date(line["date"])
+        add_covid_data(region, date, line, out_map)
 
 
 def csse_str2date(datestr):
@@ -86,6 +98,25 @@ def csse_parser_confirmed(lines, out_map):
 
 def csse_parser_deaths(lines, out_map):
     return csse_parser(lines, out_map, "total_deaths")
+
+
+def owid_str2date(datestr):
+    year, month, day = datestr.split("-")
+    return dt.date(int(year), int(month), int(day))
+
+
+def add_owid_data(region, date, line, out_map):
+    add_raw_data_point(region, date, 'owid', 'new_cases', zero_missing(line, 'new_cases'), out_map)
+    add_raw_data_point(region, date, 'owid', 'total_cases', zero_missing(line, 'total_cases'), out_map)
+    add_raw_data_point(region, date, 'owid', 'new_deaths', zero_missing(line, 'new_deaths'), out_map)
+    add_raw_data_point(region, date, 'owid', 'total_deaths', zero_missing(line, 'total_deaths'), out_map)
+
+
+def owid_parser(lines, out_map):
+    for line in lines:
+        region = rn.normalize(line["location"])
+        date = owid_str2date(line["date"])
+        add_owid_data(region, date, line, out_map)
 
 
 def main():
