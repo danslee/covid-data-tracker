@@ -29,22 +29,30 @@ SOURCES = [
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--datadir', default='.', type=str, nargs='?', help="directory to store/read datafiles")
-    parser.add_argument('-t', '--ttl', default='60', type=int, nargs='?', help="ttl for datafiles in minutes")
+    parser.add_argument('-t', '--ttl_minutes', default='60', type=int, nargs='?', help="ttl for datafiles in minutes")
     args = parser.parse_args()
     return args
 
 
+def check_ttl(outfile, ttl_seconds):
+    if os.path.isfile(outfile):
+        mtime = dt.datetime.utcfromtimestamp(os.path.getmtime(outfile))
+        stale_time = dt.datetime.utcnow() - dt.timedelta(0, ttl_seconds)
+        if mtime > stale_time:
+            return True
+    return False
+
+
 def get_source(args, source):
     outfile = os.path.join(args.datadir, source.filename)
-    mtime = dt.datetime.utcfromtimestamp(os.path.getmtime(outfile))
-    ttl_seconds = args.ttl * 60
-    stale_time = dt.datetime.utcnow() - dt.timedelta(0, ttl_seconds)
-    if mtime > stale_time:
+    if check_ttl(outfile, args.ttl_minutes * 60):
         print(f"skipping reading '{source.name}' from '{source.url}' into '{source.filename}' as file is still fresh " +
-                f" with ttl of {args.ttl} minutes and mtime of {mtime}")
+              f" within the ttl of {args.ttl_minutes} minutes.")
         return
     print(f"reading '{source.name}' from '{source.url}' into '{source.filename}'")
-    urllib.request.urlretrieve(source.url, outfile)
+    req = urllib.request.Request(source.url, headers={'User-Agent': 'Mozilla/5.0'})
+    with open(outfile, 'wb') as output_file:
+        output_file.write(urllib.request.urlopen(req).read())
 
 
 def main():
