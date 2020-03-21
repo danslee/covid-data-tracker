@@ -15,9 +15,7 @@ Master Dictionary
         }
     }
 }
-
 """
-
 
 import datetime as dt
 import region_normalize as rn
@@ -39,6 +37,14 @@ def add_raw_data_point(region, date, name, datatype, val, out_map):
 
 def add_data_point_cascade(region, date, name, datatype, val, out_map):
     add_raw_data_point(region, date, name, datatype, val, out_map)
+
+
+def fill_gaps(source, key, out_map):
+    pass
+
+
+def calc_deltas(source, key, delta_key, out_map):
+    pass
 
 
 def zero_missing(inmap, key):
@@ -93,11 +99,17 @@ def csse_parser(lines, out_map, datatype):
 
 
 def csse_parser_confirmed(lines, out_map):
-    return csse_parser(lines, out_map, "total_cases")
+    csse_parser(lines, out_map, "total_cases")
+    fill_gaps("csse", "total_cases", out_map)
+    calc_deltas("csse", "total_cases", "new_cases", out_map)
+    return
 
 
 def csse_parser_deaths(lines, out_map):
-    return csse_parser(lines, out_map, "total_deaths")
+    csse_parser(lines, out_map, "total_deaths")
+    fill_gaps("csse", "total_deaths", out_map)
+    calc_deltas("csse", "total_deaths", "new_deaths", out_map)
+    return
 
 
 def owid_str2date(datestr):
