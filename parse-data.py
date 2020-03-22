@@ -17,9 +17,9 @@ class Source(object):
 
 SOURCES = [
     Source("covidtracker", "covidtracker-daily.csv", covid_parser),
-    Source("csse",  "csse-confirmed.csv", csse_parser_confirmed),
+    Source("csse", "csse-confirmed.csv", csse_parser_confirmed),
     Source("csse", "csse-deaths.csv", csse_parser_deaths),
-    Source("owid",  "owid-full_data.csv", owid_parser),
+    Source("owid", "owid-full_data.csv", owid_parser),
 ]
 
 

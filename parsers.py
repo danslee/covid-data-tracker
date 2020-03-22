@@ -4,9 +4,9 @@
 
 Master Dictionary
 
-{ region:                                 # regions are tuples (country, [subdivision,] [microdivion]) of len 1-3
-    { date:                               # datetime.date only days, no normalization of dates is attempted
-        { name:                           # name of source, csse, owid, covidtracker
+{ region:                       # regions are tuples (country, [subdivision,] [microdivion]) of len 1-3
+    { date:                     # datetime.date only days, no normalization of dates is attempted
+        { name:                 # name of source, csse, owid, covidtracker
             { 'new_cases':val,
               'new_deaths':val,
               'total_cases':val,
@@ -68,7 +68,8 @@ def covid_str2date(datestr):
 
 
 def add_covid_data(region, date, line, out_map):
-    add_raw_data_point(region, date, 'covid', 'total_cases', zero_missing(line, 'positive'), out_map)
+    add_raw_data_point(region, date, 'covid', 'total_cases', zero_missing(line, 'positive'),
+                       out_map)
     add_raw_data_point(region, date, 'covid', 'total_deaths', zero_missing(line, 'death'), out_map)
 
 
@@ -119,9 +120,12 @@ def owid_str2date(datestr):
 
 def add_owid_data(region, date, line, out_map):
     add_raw_data_point(region, date, 'owid', 'new_cases', zero_missing(line, 'new_cases'), out_map)
-    add_raw_data_point(region, date, 'owid', 'total_cases', zero_missing(line, 'total_cases'), out_map)
-    add_raw_data_point(region, date, 'owid', 'new_deaths', zero_missing(line, 'new_deaths'), out_map)
-    add_raw_data_point(region, date, 'owid', 'total_deaths', zero_missing(line, 'total_deaths'), out_map)
+    add_raw_data_point(region, date, 'owid', 'total_cases', zero_missing(line, 'total_cases'),
+                       out_map)
+    add_raw_data_point(region, date, 'owid', 'new_deaths', zero_missing(line, 'new_deaths'),
+                       out_map)
+    add_raw_data_point(region, date, 'owid', 'total_deaths', zero_missing(line, 'total_deaths'),
+                       out_map)
 
 
 def owid_parser(lines, out_map):
@@ -132,7 +136,7 @@ def owid_parser(lines, out_map):
 
 
 def main():
-    #run_tests TBD
+    # run_tests TBD
     pass
 
 
