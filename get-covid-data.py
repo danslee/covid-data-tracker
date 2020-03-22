@@ -5,7 +5,7 @@ import datetime as dt
 import os
 import sys
 import urllib.request
-
+from urllib.error import HTTPError
 
 if sys.version_info[0] < 3:
     raise Exception("Must be using Python 3")
@@ -55,10 +55,20 @@ def get_source(args, source):
         output_file.write(urllib.request.urlopen(req).read())
 
 
+def get_source_with_retry(args, source, retry_count=0):
+    try:
+        return get_source(args, source)
+    except HTTPError:
+        if retry_count < 1:
+            print(f"Too many errors trying to fetch f{source}")
+        # A bit ugly, but it's tail recursion
+        return get_source_with_retry(args, source, retry_count - 1)
+
+
 def main():
     args = get_args()
     for source in SOURCES:
-        get_source(args, source)
+        get_source_with_retry(args, source, retry_count=3)
 
 
 if __name__ == '__main__':
