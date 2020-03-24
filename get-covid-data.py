@@ -5,6 +5,7 @@ import datetime as dt
 import os
 import sys
 import urllib.request
+
 from urllib.error import HTTPError
 
 if sys.version_info[0] < 3:
@@ -22,10 +23,12 @@ SOURCES = [
     Source("covidtracker", "http://covidtracking.com/api/states/daily.csv",
            "covidtracker-daily.csv"),
     Source("csse",
-           "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
+           "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" +
+           "csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
            "csse-confirmed.csv"),
     Source("csse",
-           "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv",
+           "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" +
+           "csse_covid_19_time_series/time_series_19-covid-Deaths.csv",
            "csse-deaths.csv"),
     Source("owid", "https://covid.ourworldindata.org/data/ecdc/full_data.csv",
            "owid-full_data.csv"),

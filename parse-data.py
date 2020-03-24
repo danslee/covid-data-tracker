@@ -2,10 +2,8 @@
 
 import argparse
 import csv
+import parsers
 import os
-import sys
-
-from parsers import *
 
 
 class Source(object):
@@ -16,10 +14,10 @@ class Source(object):
 
 
 SOURCES = [
-    Source("covidtracker", "covidtracker-daily.csv", covid_parser),
-    Source("csse", "csse-confirmed.csv", csse_parser_confirmed),
-    Source("csse", "csse-deaths.csv", csse_parser_deaths),
-    Source("owid", "owid-full_data.csv", owid_parser),
+    Source("covidtracker", "covidtracker-daily.csv", parsers.covid_parser),
+    Source("csse", "csse-confirmed.csv", parsers.csse_parser_confirmed),
+    Source("csse", "csse-deaths.csv", parsers.csse_parser_deaths),
+    Source("owid", "owid-full_data.csv", parsers.owid_parser),
 ]
 
 
