@@ -24,11 +24,11 @@ SOURCES = [
            "covidtracker-daily.csv"),
     Source("csse",
            "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" +
-           "csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
+           "csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
            "csse-confirmed.csv"),
     Source("csse",
            "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" +
-           "csse_covid_19_time_series/time_series_19-covid-Deaths.csv",
+           "csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
            "csse-deaths.csv"),
     Source("owid", "https://covid.ourworldindata.org/data/ecdc/full_data.csv",
            "owid-full_data.csv"),
