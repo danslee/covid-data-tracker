@@ -194,7 +194,7 @@ def covid_parser(lines, out_map):
     add_usa_aggregation(covid_map, "total_cases")
     add_usa_aggregation(covid_map, "new_cases")
     add_usa_aggregation(covid_map, "total_deaths")
-    add_usa_aggregation(covid_map, "new_cases")
+    add_usa_aggregation(covid_map, "new_deaths")
 
     calc_rates(covid_map, "total_cases", "new_cases", "rate_cases")
     calc_weighted_rates(covid_map, "rate_cases", "weighted_rate_cases")
