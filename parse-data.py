@@ -58,7 +58,7 @@ def print_time_series(start_date, header, time_series):
     while curr_day in time_series:
         print(f" {int_or_float(header, time_series[curr_day])}", end="")
         curr_day = curr_day + dt.timedelta(days=1)
-    print("")
+    print(f"     {curr_day - dt.timedelta(days=1):%Y-%m-%d}")
 
 
 def print_region_data(start_date, header, region_data):
