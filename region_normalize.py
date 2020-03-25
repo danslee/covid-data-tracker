@@ -7,7 +7,6 @@ import sys
 if sys.version_info[0] < 3:
     raise Exception("Must be using Python 3")
 
-
 # Read in country list and build a map of names
 COUNTRIES = {}
 __location__ = os.path.realpath(
@@ -30,18 +29,22 @@ for country_dict in countries:
 
 MISSING_COUNTRIES = ["Cruise Ship", "World", "Vatican"]
 
+STATES = {'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'American Samoa': 'AS',
+          'Arizona': 'AZ', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT',
+          'District of Columbia': 'DC', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
+          'Guam': 'GU', 'Hawaii': 'HI', 'Iowa': 'IA', 'Idaho': 'ID', 'Illinois': 'IL',
+          'Indiana': 'IN', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA',
+          'Massachusetts': 'MA', 'Maryland': 'MD', 'Maine': 'ME', 'Michigan': 'MI',
+          'Minnesota': 'MN', 'Missouri': 'MO', 'Northern Mariana Islands': 'MP',
+          'Mississippi': 'MS', 'Montana': 'MT', 'National': 'NA', 'North Carolina': 'NC',
+          'North Dakota': 'ND', 'Nebraska': 'NE', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
+          'New Mexico': 'NM', 'Nevada': 'NV', 'New York': 'NY', 'Ohio': 'OH', 'Oklahoma': 'OK',
+          'Oregon': 'OR', 'Pennsylvania': 'PA', 'Puerto Rico': 'PR', 'Rhode Island': 'RI',
+          'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX',
+          'Utah': 'UT', 'Virginia': 'VA', 'Virgin Islands': 'VI', 'Vermont': 'VT',
+          'Washington': 'WA', 'Wisconsin': 'WI', 'West Virginia': 'WV', 'Wyoming': 'WY'}
 
-STATES = {'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'American Samoa': 'AS', 'Arizona': 'AZ',
-          'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'District of Columbia': 'DC', 'Delaware': 'DE',
-          'Florida': 'FL', 'Georgia': 'GA', 'Guam': 'GU', 'Hawaii': 'HI', 'Iowa': 'IA', 'Idaho': 'ID', 'Illinois': 'IL',
-          'Indiana': 'IN', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Massachusetts': 'MA', 'Maryland': 'MD',
-          'Maine': 'ME', 'Michigan': 'MI', 'Minnesota': 'MN', 'Missouri': 'MO', 'Northern Mariana Islands': 'MP',
-          'Mississippi': 'MS', 'Montana': 'MT', 'National': 'NA', 'North Carolina': 'NC', 'North Dakota': 'ND',
-          'Nebraska': 'NE', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'Nevada': 'NV',
-          'New York': 'NY', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Puerto Rico': 'PR',
-          'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX',
-          'Utah': 'UT', 'Virginia': 'VA', 'Virgin Islands': 'VI', 'Vermont': 'VT', 'Washington': 'WA',
-          'Wisconsin': 'WI', 'West Virginia': 'WV', 'Wyoming': 'WY'}
+REV_STATES = res = dict((v, k) for k, v in STATES.items())
 
 NORMALIZED_COUNTRIES = {
     "Cote d'Ivoire": "Côte d'Ivoire",
@@ -74,6 +77,17 @@ NORMALIZED_COUNTRIES = {
     "Swaziland": "Kingdom of Eswatini",
     "Macedonia": "North Macedonia",
 }
+
+
+def is_us_state(region):
+    """checks to see if the normalized region tuple is a state in the USA"""
+    if len(region) != 2:
+        return False
+    if region[0] != "United States of America":
+        return False
+    if region[1] not in REV_STATES:
+        return False
+    return True
 
 
 def normalize_country(country):
@@ -129,9 +143,8 @@ def main():
         normalize("US", "California") == ("United States of America", "CA"),
         normalize("USA", "CA") == ("United States of America", "CA"),
         normalize("USA", "District of Columbia") == ("United States of America", "DC"),
-        ]))
+    ]))
 
 
 if __name__ == '__main__':
     main()
-

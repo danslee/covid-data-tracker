@@ -93,7 +93,24 @@ def calc_deltas(source_map, key, delta_key):
         calc_deltas_for_time_series(region_data[key], region_data[delta_key])
 
 
+def add_to_aggregation(source_ts, sum_ts):
+    if not len(source_ts):
+        return
+    for date, value in source_ts.items():
+        sum_ts[date] += value
+
+
+def add_usa_aggregation(source_dict, key):
+    usa_dict = source_dict[("United States of America",)]
+    for region, region_data in source_dict.items():
+        if not rn.is_us_state(region):
+            continue
+        add_to_aggregation(region_data[key], usa_dict[key])
+
+
 def calc_rates_for_time_series(total_ts, delta_ts, rate_ts):
+    if not len(total_ts):
+        return
     day = sorted(total_ts.keys())[0] + ONE_DAY
     while day in delta_ts:
         rate = 0.0
@@ -167,15 +184,22 @@ def covid_parser(lines, out_map):
         date = covid_str2date(line["date"])
         add_covid_data(region, date, line, out_map)
 
-    fill_gaps_for_source(out_map["covid"], "total_cases")
-    calc_deltas(out_map["covid"], "total_cases", "new_cases")
-    fill_gaps_for_source(out_map["covid"], "total_deaths")
-    calc_deltas(out_map["covid"], "total_deaths", "new_deaths")
+    covid_map = out_map["covid"]
 
-    calc_rates(out_map["covid"], "total_cases", "new_cases", "rate_cases")
-    calc_weighted_rates(out_map["covid"], "rate_cases", "weighted_rate_cases")
-    calc_rates(out_map["covid"], "total_deaths", "new_deaths", "rate_deaths")
-    calc_weighted_rates(out_map["covid"], "rate_deaths", "weighted_rate_deaths")
+    fill_gaps_for_source(covid_map, "total_cases")
+    calc_deltas(covid_map, "total_cases", "new_cases")
+    fill_gaps_for_source(covid_map, "total_deaths")
+    calc_deltas(covid_map, "total_deaths", "new_deaths")
+
+    add_usa_aggregation(covid_map, "total_cases")
+    add_usa_aggregation(covid_map, "new_cases")
+    add_usa_aggregation(covid_map, "total_deaths")
+    add_usa_aggregation(covid_map, "new_cases")
+
+    calc_rates(covid_map, "total_cases", "new_cases", "rate_cases")
+    calc_weighted_rates(covid_map, "rate_cases", "weighted_rate_cases")
+    calc_rates(covid_map, "total_deaths", "new_deaths", "rate_deaths")
+    calc_weighted_rates(covid_map, "rate_deaths", "weighted_rate_deaths")
 
 
 def csse_str2date(datestr):
@@ -197,21 +221,32 @@ def csse_parser(lines, out_map, datatype):
 
 def csse_parser_confirmed(lines, out_map):
     csse_parser(lines, out_map, "total_cases")
-    fill_gaps_for_source(out_map["csse"], "total_cases")
-    calc_deltas(out_map["csse"], "total_cases", "new_cases")
+    csse_map = out_map["csse"]
 
-    calc_rates(out_map["csse"], "total_cases", "new_cases", "rate_cases")
-    calc_weighted_rates(out_map["csse"], "rate_cases", "weighted_rate_cases")
+    fill_gaps_for_source(csse_map, "total_cases")
+    calc_deltas(csse_map, "total_cases", "new_cases")
+
+    add_usa_aggregation(csse_map, "total_cases")
+    add_usa_aggregation(csse_map, "new_cases")
+
+    calc_rates(csse_map, "total_cases", "new_cases", "rate_cases")
+    calc_weighted_rates(csse_map, "rate_cases", "weighted_rate_cases")
+
     return
 
 
 def csse_parser_deaths(lines, out_map):
     csse_parser(lines, out_map, "total_deaths")
-    fill_gaps_for_source(out_map["csse"], "total_deaths")
-    calc_deltas(out_map["csse"], "total_deaths", "new_deaths")
+    csse_map = out_map["csse"]
 
-    calc_rates(out_map["csse"], "total_deaths", "new_deaths", "rate_deaths")
-    calc_weighted_rates(out_map["csse"], "rate_deaths", "weighted_rate_deaths")
+    fill_gaps_for_source(csse_map, "total_deaths")
+    calc_deltas(csse_map, "total_deaths", "new_deaths")
+
+    add_usa_aggregation(csse_map, "total_deaths")
+    add_usa_aggregation(csse_map, "new_deaths")
+
+    calc_rates(csse_map, "total_deaths", "new_deaths", "rate_deaths")
+    calc_weighted_rates(csse_map, "rate_deaths", "weighted_rate_deaths")
     return
 
 
