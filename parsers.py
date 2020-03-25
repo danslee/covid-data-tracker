@@ -30,7 +30,7 @@ import region_normalize as rn
 import re
 
 SMOOTHING_FACTOR = 0.3
-RATE_CUTOFF = 50
+RATE_CUTOFF = 100
 ONE_DAY = dt.timedelta(days=1)
 
 
@@ -52,7 +52,7 @@ def build_master_dict():
 
 def add_raw_data_point(name, region, datatype, date, val, out_map):
     if not val:
-        val = 0
+        return
     out_map[name][region][datatype][date] = float(val)
 
 
@@ -122,6 +122,7 @@ def calc_weighted_rates_for_time_series(rate_ts, weighted_rate_ts):
         old_weight = (1.0 - SMOOTHING_FACTOR) * last_weighted_rate
         last_weighted_rate = (SMOOTHING_FACTOR * rate_ts[day]) + old_weight
         weighted_rate_ts[day] = last_weighted_rate
+        print(weighted_rate_ts[day])
         day += ONE_DAY
 
 
@@ -170,8 +171,6 @@ def covid_parser(lines, out_map):
     calc_deltas(out_map["covid"], "total_cases", "new_cases")
     fill_gaps_for_source(out_map["covid"], "total_deaths")
     calc_deltas(out_map["covid"], "total_deaths", "new_deaths")
-
-    print("zzzz covid", str(out_map["covid"].keys()))
 
     calc_rates(out_map["covid"], "total_cases", "new_cases", "rate_cases")
     calc_weighted_rates(out_map["covid"], "rate_cases", "weighted_rate_cases")
