@@ -50,6 +50,7 @@ def print_time_series(start_date, header, time_series):
         if "rate_" in header:
             return f"{value:.3f}"
         return f"{value:.0f}"
+
     if not len(time_series.keys()):
         return
     min_date = sorted(time_series.keys())[0]
